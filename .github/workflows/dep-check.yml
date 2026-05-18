@@ -53,7 +53,7 @@ jobs:
         with:
           node-version: '20'
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         if: steps.pm.outputs.pm == 'pnpm'
 
       - name: Install (pnpm)
