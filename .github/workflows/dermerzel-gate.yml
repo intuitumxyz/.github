@@ -46,7 +46,7 @@ jobs:
     steps:
       - name: Mint Dermerzel installation token
         id: app-token
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
           app-id: ${{ secrets.DERMERZEL_APP_ID }}
           private-key: ${{ secrets.DERMERZEL_PRIVATE_KEY }}
