@@ -21,7 +21,7 @@ jobs:
       actions: read
     steps:
       - name: Open or update failed workflow digest
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.NODUS_BOT_PAT }}
           script: |
