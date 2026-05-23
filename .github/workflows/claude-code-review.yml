@@ -6,6 +6,8 @@ on:
 
 jobs:
   claude-review:
+    # Skip bot-authored PRs (Dependabot, release-please, etc.) to save credits
+    if: ${{ !endsWith(github.event.pull_request.user.login, '[bot]') }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
