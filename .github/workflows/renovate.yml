@@ -1,0 +1,48 @@
+name: Renovate
+
+# Self-hosted Renovate that runs on GitHub's runners (matches CI; no external
+# host). Scans all getnodus repos that contain a renovate.json and opens/merges
+# dependency PRs per the shared preset (default.json in this repo).
+#
+# Requires a "Renovate" GitHub App installed on the org, with its credentials
+# stored as repo/org secrets RENOVATE_APP_ID and RENOVATE_APP_PRIVATE_KEY.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: "Renovate log level"
+        type: choice
+        default: info
+        options: [debug, info, warn]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: renovate
+  cancel-in-progress: false
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate a token for the Renovate GitHub App
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.RENOVATE_APP_ID }}
+          private-key: ${{ secrets.RENOVATE_APP_PRIVATE_KEY }}
+          owner: getnodus
+
+      - name: Run Renovate
+        uses: renovatebot/github-action@v46
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+        env:
+          RENOVATE_AUTODISCOVER: "true"
+          RENOVATE_AUTODISCOVER_FILTER: "getnodus/*"
+          RENOVATE_ONBOARDING: "false"
+          LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
